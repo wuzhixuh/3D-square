@@ -1,0 +1,250 @@
+ (function(){
+     alert(a);   // a为函数体
+     var a = 1;
+     function a() {
+
+     }
+ })
+ (function(){
+    function a() {}
+    var a;
+    alert(a);   // a的赋值要保留当前的词法作用域
+    // a为函数体  函数优先级比变量高（a只声明没赋值被忽略，赋值了的话就等于赋的值）
+    a = 1;
+
+ })
+
+ if(false){
+     a = 1;
+ }
+ alert(a)   // undefined
+
+
+ function test(){
+     var a;  // 提升当前函数作用域顶端
+     if(false){
+        a = 1;
+     }
+     alert("inner"+a); // undefined
+ }
+ alert(a)  // a is not defined
+
+ {
+     console.log(aa)   // 块级作用域
+ }
+
+ if(false){    // 模拟块级作用域
+     // let a = 1;
+     try{
+         throw 1;
+     } catch(a) {
+         alert(a);
+     }
+ }
+ alert(a)  // a is not defined
+
+  if(true){    // 模拟块级作用域
+     // let a = 1;
+     try{
+         throw 1;    // 1
+     } catch(a) {
+         alert(a);
+     }
+ }
+ alert(a)  // a is not defined
+
+
+ var yideng = {a:1};
+ with(yideng){  // with只对对象上已有的值赋值
+     b = 2;
+ }
+alert(yideng.b);  // undefined   创建全局变量
+
+test();
+function test(){
+    alert(123)
+}
+
+
+ (function(){
+     var a = b = 1;
+ })
+ alert(a); // a is not defined
+ alert(b); // undefined
+
+ (function(){
+     var a = 1;
+     b = 1;
+ })
+alert(a); // a is not defined
+ alert(b); // undefined
+
+
+ function test(){
+     var a = 1;
+     return function(){}   // a没占用 回收
+ }
+
+
+function test(){
+     var a = 1;
+     return function(){
+        eval("");   // 浏览器不确定要不要用   不会被回收
+        with();
+        try{
+
+        } catch() {
+
+        }
+     }
+ }
+
+function test(){
+     var a = 1;
+     return function(){
+         window.eval("");   // 回收
+     }
+ }
+
+
+ function test(){
+     var a = 1;
+     return function(){
+         window.eval("");   // 回收
+     }
+ }
+
+ // VO(每执行一步就往执行堆栈里，VO保持作用域[global,this]) AO(执行函数时所有的anguments保存到AO里)
+ function test() {
+
+ }
+
+
+this.a = 20;
+var yideng = {
+     a: 30,
+     init: function(){
+         alert(this.a)
+     }
+ }
+ yideng.init();  // this   谁调用它执行谁  30
+
+
+this.a = 20;
+var yideng = {
+     a: 30,
+     init: function(){
+         alert(this.a)
+     }
+ }
+ var s = yideng.init;
+ s();// this   谁调用它指谁  window   20
+
+
+this.a = 20;
+var yideng = {
+     a: 30,
+     init: function(){
+         function test(){
+             alert(this.a);
+         }
+         test();
+     }
+ }
+ yideng.init();  // this   window   20
+
+this.a = 20;
+var yideng = {
+     a: 30,
+     init: () => {
+        alert(this.a);
+     }
+ }
+ yideng.init();  // this  箭头函数bind(this)   20
+
+
+ function test() {
+     this.a = 20;      // 优先于原型链去查找
+ }
+ test.prototype.a = 30;
+ alert((new test()).a)
+
+class test{    // 整个的类是基于原型链实现的
+    constructor(){
+        this.qq = 2018
+    }
+    a: (){
+        console.log(1)
+    }
+}
+function test(){
+    this.qq = 2018
+}
+test.protitype.aconstructor = test;
+test.protitype.a = function() {
+    console.log(2)
+}
+(new test).a();   //  2
+
+
+//  暂时性死区
+var i;
+if (true) {
+    i = 5;
+    let i;    //  必须得等 i 先定义后使用
+}
+alert(i)   // i is not defined
+
+
+var list_li = document.getElementsByTagName("li");
+for (var i = 0; i < list_li.length; i++) {
+    list_li[i].onclick = function () {
+        console.log(this.innerHTML);   // 简单粗暴
+    }
+}
+
+
+function test(m) {   //  m参数按值传递
+    m = {   // 重写指针指向被改变
+        v: 5
+    }
+    m.v = 5;  //  指向还是同一个
+}
+var m = {
+    k: 30
+};
+test(m);  //  undefined
+alert(m.v)   //  5
+
+
+请在下面写出JavaScript面向对象编程的混合式继承，并写出ES6版本的继承。
+要求：汽车是父类，Cruze是子类，父类有颜色、价格属性，有售卖地方法，Cruze子类实现父类颜色是红色，价格是14万，售卖方法实现输出如下语句：将红色的Cruze卖给了小王价格是14万。
+
+function Bus(color,price) {
+    this.color = color;
+    this.price = price;
+}
+
+Bus.prototype.sell = function() {
+    console.log(this.color + "色的车卖了" + this.price + "万");
+}
+
+var Cruze = function(color,price){
+    Car.call(this.color,this,price);
+}
+
+var _pro = Object.create(Bus.prototype);
+_pro.constructor = Cruze;
+Cruze.prototype = _pro;
+
+var xiaowang = new Cruze('red','14');
+console.log(xiaowang.sell)
+
+
+//  0-1000
+10 - Math.floor(speed / 100) = 1
+
+var s = "abc";
+[...s];
+Array.prototype.splic.call();
+Array.form(s);
