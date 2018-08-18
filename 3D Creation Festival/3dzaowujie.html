@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            position: relative;
+            margin: 20px auto;
+            width: 506px;
+            height: 433px;
+        }
+
+        .box {
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
+            -webkit-perspective: 1000px;
+            -moz-perspective: 1000px;
+            -ms-perspective: 1000px;
+            -o-perspective: 1000px;
+            perspective-origin: 50% 50%;
+            -webkit-perspective-origin: 50% 50%;
+            -moz-perspective-origin: 50% 50%;
+            -ms-perspective-origin: 50% 50%;
+            -o-perspective-origin: 50% 50%;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+            -moz-transform-style: preserve-3d;
+            -ms-transform-style: preserve-3d;
+            -o-transform-style: preserve-3d;
+        }
+
+        .box div {
+            width: 506px;
+            height: 433px;
+            position: absolute;
+            left: 50%;
+            top: 100px;
+            margin-left: -253px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="box">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div> </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div> </div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div> </div>
+        </div>
+    </div>
+
+    <script>
+        function calTranslateZ(opts) {
+            return Math.round(opts.width / (2 * Math.tan(Math.PI / opts.number)))
+        }
+        const aa = calTranslateZ({
+            width: 506,
+            number: 18
+        });
+        var container = document.getElementsByClassName('container')[0];
+        var box = document.getElementsByClassName('box')[0];
+        var arr = box.getElementsByTagName('div');
+        for (let i = 0; i < arr.length; i++) {
+            if (i < 9) {
+                arr[i].style.background = `url("./xizang_0${i+1}.png") no-repeat`;
+            } else {
+                arr[i].style.background = `url("./xizang_${i+1}.png") no-repeat`;
+            }
+            arr[i].style.transform = `rotateY(${360/arr.length*i}deg) translateZ(${aa - 3}px)`;
+            arr[i].style.WebkitTransform = `rotateY(${360/arr.length * i}deg) translateZ(${aa - 3}px)`;
+            arr[i].style.MozTransform = `rotateY(${360/arr.length * i}deg) translateZ(${aa - 3}px)`;
+            arr[i].style.MsTransform = `rotateY(${360/arr.length * i}deg) translateZ(${aa - 3}px)`;
+            arr[i].style.OTransform = `rotateY(${360/arr.length * i}deg) translateZ(${aa - 3}px)`;
+        }
+        var startX = 0,
+            x = 0,
+            endX = 0;
+        var flag = true;
+        box.addEventListener("touchstart", function (event) {
+            event.preventDefault();
+
+            let touch = event.targetTouches[0];
+            startX = touch.pageX - x;
+        })
+
+        box.addEventListener("touchmove", function (event) {
+            if (flag) {
+                event.preventDefault();
+                let touch = event.targetTouches[0];
+                endX = touch.startX;
+                x = endX - startX;
+                box.style.transform = `rotateY(${x}deg)`;
+                box.style.WebkitTransform = `rotateY(${x}deg)`;
+                box.style.MozTransform = `rotateY(${x}deg)`;
+                box.style.MsTransform = `rotateY(${x}deg)`;
+                box.style.OTransform = `rotateY(${x}deg)`;
+            } else {
+                return false;
+            }
+        })
+
+        box.addEventListener("touchend", function (event) {
+            console.log("111");
+        })
+
+        window.addEventListener("deviceorientation", function (event) {
+            let gamma = event.gamma;
+            if (Math.abs(gamma) > 1) {
+                flag = false;
+                box.style.transform = `rotateY(${gamma*3}deg)`;
+                box.style.WebkitTransform = `rotateY(${gamma*3}deg)`;
+                box.style.MozTransform = `rotateY(${gamma*3}deg)`;
+                box.style.MsTransform = `rotateY(${gamma*3}deg)`;
+                box.style.OTransform = `rotateY(${gamma*3}deg)`;
+            } else {
+                flag = true;
+            }
+        })
+    </script>
+</body>
+
+</html>
